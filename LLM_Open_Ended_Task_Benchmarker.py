@@ -34,36 +34,43 @@ EVALUATION_CATEGORIES = [
 # Temp 0.2 for models that support it given nature of task
 MODEL_CONFIGS = {
     "gpt-4o": {
+        "provider": "openai",
         "supports_system": True,
         "temperature": 0.2
     },
     "gpt-4o-mini": {
+        "provider": "openai",
         "supports_system": True,
         "temperature": 0.2
     },
     "o1": {
+        "provider": "openai",
         "supports_system": True
         # defaulting to medium reasoning effort
     },
     "o1-mini": {
+        "provider": "openai",
         "supports_system": False
     },
     "claude-3-5-haiku-20241022": {
+        "provider": "anthropic",
         "supports_system": True,
         "required_params": {"max_tokens": 4096},
         "temperature": 0.2
     },
     "claude-3-5-sonnet-20241022": {
+        "provider": "anthropic",
         "supports_system": True,
         "required_params": {"max_tokens": 4096},
         "temperature": 0.2
     },
     "gemini-2.0-flash-exp": {
+        "provider": "google",
         "supports_system": True,
-        "provider": "google",  
-        "temperature": 0.2,    
+        "temperature": 0.2
     },
 }
+
 
 models_to_test = [
     "gpt-4o-mini",
@@ -182,16 +189,14 @@ class GoogleGeminiClient(BaseLLMClient):
 class LLMClientFactory:
     @staticmethod
     def create_client(model_name):
-        config = MODEL_CONFIGS.get(model_name, {"supports_system": True})
-        
-        if model_name.startswith("claude-"):
+        config = MODEL_CONFIGS.get(model_name, {})
+        provider = config.get("provider", "openai")  # Default to openai if not specified
+
+        if provider == "anthropic":
             return AnthropicClient(ANTHROPIC_API_KEY, model_name, config)
-        
-        elif config.get("provider") == "google":
+        elif provider == "google":
             return GoogleGeminiClient(GOOGLE_API_KEY, model_name, config)
-        
-        # Default to Open AI
-        else:
+        else: 
             return OpenAIClient(OPENAI_API_KEY, model_name, config)
 
 def read_file(file_path):
