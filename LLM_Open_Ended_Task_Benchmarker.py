@@ -303,7 +303,7 @@ def create_benchmark_plot(df, output_path):
     
     ax.set_title("LLM Performance Benchmark Results", fontsize=14, color="white")
     ax.set_xlabel("Model", fontsize=12, color="white")
-    ax.set_ylabel("Score (%)", fontsize=12, color="white")
+    ax.set_ylabel("Score", fontsize=12, color="white")
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
     ax.grid(False)
